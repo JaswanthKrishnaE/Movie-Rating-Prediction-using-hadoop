@@ -5,7 +5,7 @@ import joblib
 
 app = Flask(__name__)
 
-with open('RF_model.pkl', 'rb') as model_file:
+with open('./models/RF_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
 @app.route('/predict', methods=['POST'])
@@ -17,7 +17,7 @@ def predict():
         td = [arr]
         td_arr = np.array(td)
         predictions = model.predict(td_arr)
-        sc = joblib.load('LabelEncoder.pkl')
+        sc = joblib.load('./models/LabelEncoder.pkl')
         value = predictions
         inverse_transformed_value = sc.inverse_transform([value])[0]
         print(inverse_transformed_value)

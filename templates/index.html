@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Prediction</title>
+</head>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="NewAgent"
+  agent-id="9e0b700e-276d-429d-8bf9-8fd8391ce132"
+  language-code="en"
+></df-messenger>
+<body>
+    <h1>Movie Prediction</h1>
+    <form id="movieForm">
+        <label for="content_rating">Content Rating:</label>
+        <input type="text" id="content_rating" name="content_rating" required><br>
+
+        <label for="genres">Genres:</label>
+        <input type="text" id="genres" name="genres" required><br>
+
+        <label for="runtime">Runtime:</label>
+        <input type="number" id="runtime" name="runtime" required><br>
+
+        <label for="tomatometer_status">Tomatometer Status:</label>
+        <input type="text" id="tomatometer_status" name="tomatometer_status" required><br>
+
+        <label for="tomatometer_count">Tomatometer Count:</label>
+        <input type="number" id="tomatometer_count" name="tomatometer_count" required><br>
+
+        <label for="audience_status">Audience Status:</label>
+        <input type="text" id="audience_status" name="audience_status" required><br>
+
+        <label for="audience_rating">Audience Rating:</label>
+        <input type="number" id="audience_rating" name="audience_rating" required><br>
+
+        <label for="audience_count">Audience Count:</label>
+        <input type="number" id="audience_count" name="audience_count" required><br>
+
+        <label for="tomatometer_top_critics_count">Tomatometer Top Critics Count:</label>
+        <input type="number" id="tomatometer_top_critics_count" name="tomatometer_top_critics_count" required><br>
+
+        <label for="tomatometer_fresh_critics_count">Tomatometer Fresh Critics Count:</label>
+        <input type="number" id="tomatometer_fresh_critics_count" name="tomatometer_fresh_critics_count" required><br>
+
+        <label for="tomatometer_rotten_critics_count">Tomatometer Rotten Critics Count:</label>
+        <input type="number" id="tomatometer_rotten_critics_count" name="tomatometer_rotten_critics_count" required><br>
+
+        <button type="button" onclick="predictMovie()">Submit</button>
+    </form>
+
+    <p>Predicted Value: <span id="prediction"></span></p>
+
+    <script>
+        function predictMovie() {
+            var formData = {
+                'content_rating': document.getElementById('content_rating').value,
+                'genres': document.getElementById('genres').value,
+                'runtime': parseFloat(document.getElementById('runtime').value),
+                'tomatometer_status': document.getElementById('tomatometer_status').value,
+                'tomatometer_count': parseFloat(document.getElementById('tomatometer_count').value),
+                'audience_status': document.getElementById('audience_status').value,
+                'audience_rating': parseFloat(document.getElementById('audience_rating').value),
+                'audience_count': parseFloat(document.getElementById('audience_count').value),
+                'tomatometer_top_critics_count': parseFloat(document.getElementById('tomatometer_top_critics_count').value),
+                'tomatometer_fresh_critics_count': parseFloat(document.getElementById('tomatometer_fresh_critics_count').value),
+                'tomatometer_rotten_critics_count': parseFloat(document.getElementById('tomatometer_rotten_critics_count').value),
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({'movie_info': formData}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('prediction').innerText = data.predictions[0];
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
